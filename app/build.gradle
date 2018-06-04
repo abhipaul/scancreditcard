@@ -1,0 +1,101 @@
+apply plugin: 'com.android.application'
+
+buildscript {
+    repositories {
+        maven {
+            url 'http://jcenter.bintray.com/'
+//            url 'http://70.121.224.52:8081/nexus/content/groups/FIDO_Public_Repositories/'
+        }
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.google.gms:google-services:1.3.0-beta1'
+    }
+}
+
+
+android {
+
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
+    useLibrary 'org.apache.http.legacy'
+
+
+    defaultConfig {
+        applicationId "scan.kony.com.scancreditdemo"
+        minSdkVersion 21
+        targetSdkVersion 23
+        versionCode 20170602
+        versionName "1.5.2"
+        multiDexEnabled true
+    }
+
+    signingConfigs {
+        fidoKey {
+            storeFile file("${rootDir}/fido1.keystore")
+            storePassword "fido0725"
+            keyAlias "FIDO"
+            keyPassword "fido0725"
+//            storeFile file("${rootDir}/keystore.jks")
+//            storePassword "123456Aa"
+//            keyAlias "key1"
+//            keyPassword "123456Aa"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.fidoKey
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
+            debuggable true
+            signingConfig signingConfigs.fidoKey
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+}
+
+allprojects {
+    project.version = rootProject.version
+
+    repositories {
+        maven {
+            url 'http://jcenter.bintray.com/'
+//          url 'http://70.121.224.52:8081/nexus/content/groups/FIDO_Public_Repositories/'
+        }
+        mavenCentral()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.google.android.gms:play-services-gcm:9.2.1'
+    //compile 'com.squareup.picasso:picasso:2.5.0'
+    compile 'com.android.support:design:25.1.1'
+    compile 'com.android.support:cardview-v7:25.1.1'
+    compile(name: 'card.io-5.5.1', ext: 'aar')
+    //compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
+    //compile 'org.apache.commons:commons-lang3:3.0'
+//    implementation files('libs/konywidgets.jar')
+}
+
+
+//configurations {
+//    all*.exclude module: 'commons-logging'
+//    all*.exclude module: 'httpclient'
+//}
